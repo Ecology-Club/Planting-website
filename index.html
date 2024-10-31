@@ -1,50 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Google Sheet Data</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Google Sheets Data Viewer</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Data from Google Sheet</h1>
-    <div id="data"></div>
+  <h1>Google Sheets Data</h1>
+  <div id="data-container">
+    <!-- Data from sheetData.json will be loaded here -->
+  </div>
 
-    <script>
-        // Function to fetch data from Google Sheets
-        function fetchSheetData() {
-            const sheetId = '1KdnH8YliEMnmQbGetB8b1zcQwlKg6zp-YwMW5ALCQOs'; // Replace with your Google Sheet ID
-            const apiKey = ${{ secrets.API_KEY }}; // Replace with your Google API Key
-            const range = 'Sheet1!A2:F'; // Adjust the range as needed
-
-            $.get(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`, function(response) {
-                const data = response.values;
-                let html = '<table border="1"><tr>';
-                
-                // Create table header
-                data[0].forEach(header => {
-                    html += `<th>${header}</th>`;
-                });
-                html += '</tr>';
-
-                // Create table rows
-                for (let i = 1; i < data.length; i++) {
-                    html += '<tr>';
-                    data[i].forEach(cell => {
-                        html += `<td>${cell}</td>`;
-                    });
-                    html += '</tr>';
-                }
-                html += '</table>';
-                $('#data').html(html);
-            }).fail(function() {
-                $('#data').html('Error retrieving data.');
-            });
-        }
-
-        $(document).ready(function() {
-            fetchSheetData();
-        });
-    </script>
+  <script src="script.js"></script>
 </body>
 </html>
