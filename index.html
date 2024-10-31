@@ -14,7 +14,7 @@
         // Function to fetch data from Google Sheets
         function fetchSheetData() {
             const sheetId = '1KdnH8YliEMnmQbGetB8b1zcQwlKg6zp-YwMW5ALCQOs'; // Replace with your Google Sheet ID
-            const apiKey = process.env.API_KEY; // Replace with your Google API Key
+            const apiKey = ${{ secrets.API_KEY }}; // Replace with your Google API Key
             const range = 'Sheet1!A2:F'; // Adjust the range as needed
 
             $.get(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`, function(response) {
