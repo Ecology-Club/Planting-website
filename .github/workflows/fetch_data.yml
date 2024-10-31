@@ -5,6 +5,9 @@ on:
     - cron: '0 0 * * 0' # Runs weekly on Sunday at midnight
   workflow_dispatch: # Allows manual triggering
 
+permissions:
+  contents: write  # Allows the workflow to write to the repository
+
 jobs:
   update-sheet-data:
     runs-on: ubuntu-latest
@@ -15,7 +18,7 @@ jobs:
 
       - name: Fetch Google Sheets Data
         env:
-          API_KEY: ${{ secrets.API_KEY }}
+          API_KEY: ${{ secrets.API_KEY }}  # Ensure your API key is stored in secrets
         run: |
           # Use curl to fetch data from Google Sheets
           curl "https://sheets.googleapis.com/v4/spreadsheets/1KdnH8YliEMnmQbGetB8b1zcQwlKg6zp-YwMW5ALCQOs/values/Sheet1!A2:F?key=${API_KEY}" -o sheetData.json
@@ -24,5 +27,5 @@ jobs:
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
           git add sheetData.json
-          git commit -m "Update sheet data"
-          git push
+          git commit -m "Update sheet data" || echo "No changes to commit"
+          git push https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/Ecology-Club/Planting-website.git HEAD:main
