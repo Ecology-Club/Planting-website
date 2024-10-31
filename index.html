@@ -1,35 +1,50 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width">
-  <title>Awesome Cool Ecology Website</title>
-  <link href="style.css" rel="stylesheet"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Sheet Data</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
-
 <body>
-  <div id="navBar" class="topnav">
-    <a class="active" href="index.html">Home</a>
-    <a href="plants/index.html">Plants</a>
-    <a type="logo" href="index.html"><img src="https://placehold.co/80/green/white?text=Plants+PlaceHolder"/></a>
-  </div>
-  <div id="mySidebar" class="sidebar">
-    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-    <a href="#">About</a>
-    <a href="#">Services</a>
-    <a href="#">Clients</a>
-    <a href="#">Contact</a>
-  </div>
-  
-  <div id="main">
-    <button class="openbtn" onclick="openNav()">&#9776; Open Sidebar</button>
-    <h2>Collapsed Sidebar</h2>
-    <p>Content...</p>
-  </div>
-  Hello world
-  <a href="plants/index.html">Plants Page</a>
-</body>
-<script src="script.js"></script>
+    <h1>Data from Google Sheet</h1>
+    <div id="data"></div>
 
+    <script>
+        // Function to fetch data from Google Sheets
+        function fetchSheetData() {
+            const sheetId = '1KdnH8YliEMnmQbGetB8b1zcQwlKg6zp-YwMW5ALCQOs'; // Replace with your Google Sheet ID
+            const apiKey = process.env.API_KEY; // Replace with your Google API Key
+            const range = 'Sheet1!A2:F'; // Adjust the range as needed
+
+            $.get(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`, function(response) {
+                const data = response.values;
+                let html = '<table border="1"><tr>';
+                
+                // Create table header
+                data[0].forEach(header => {
+                    html += `<th>${header}</th>`;
+                });
+                html += '</tr>';
+
+                // Create table rows
+                for (let i = 1; i < data.length; i++) {
+                    html += '<tr>';
+                    data[i].forEach(cell => {
+                        html += `<td>${cell}</td>`;
+                    });
+                    html += '</tr>';
+                }
+                html += '</table>';
+                $('#data').html(html);
+            }).fail(function() {
+                $('#data').html('Error retrieving data.');
+            });
+        }
+
+        $(document).ready(function() {
+            fetchSheetData();
+        });
+    </script>
+</body>
 </html>
